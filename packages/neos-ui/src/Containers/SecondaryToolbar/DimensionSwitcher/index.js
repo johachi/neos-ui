@@ -8,7 +8,7 @@ import SelectBox from '@neos-project/react-ui-components/src/SelectBox/';
 import style from './style.css';
 import backend from '@neos-project/neos-ui-backend-connector';
 import {$get, $transform} from 'plow-js';
-import {mapObjIndexed} from 'ramda';
+import {mapValues} from 'lodash';
 import {selectors, actions} from '@neos-project/neos-ui-redux-store';
 import I18n from '@neos-project/neos-ui-i18n';
 import sortBy from 'lodash.sortby';
@@ -58,7 +58,7 @@ class DimensionSelector extends PureComponent {
     render() {
         const {icon, dimensionLabel, presets, dimensionName, activePreset, onSelect, isLoading, i18nRegistry} = this.props;
 
-        const presetOptions = mapObjIndexed(
+        const presetOptions = mapValues(
             (presetConfiguration, presetName) => {
                 return $transform(
                     {
@@ -145,7 +145,7 @@ export default class DimensionSwitcher extends PureComponent {
     // Merge active presets comming from redux with local transientPresets state (i.e. presents selected, but not yet applied)
     //
     getEffectivePresets = transientPresets => {
-        const activePresets = mapObjIndexed(
+        const activePresets = mapValues(
             dimensionPreset => dimensionPreset.name,
             this.props.activePresets
         );
@@ -299,7 +299,7 @@ export default class DimensionSwitcher extends PureComponent {
         const {contentDimensions, allowedPresets, i18nRegistry} = this.props;
         const dimensionConfiguration = $get(dimensionName, contentDimensions);
 
-        return mapObjIndexed((presetConfiguration, presetName) => {
+        return mapValues((presetConfiguration, presetName) => {
             return Object.assign({}, presetConfiguration, {
                 label: i18nRegistry.translate(presetConfiguration.label),
                 disallowed: !(allowedPresets[dimensionName] && allowedPresets[dimensionName].includes(presetName))
